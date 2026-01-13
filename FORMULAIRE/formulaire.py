@@ -5,13 +5,17 @@ import requests
 st.markdown('# Bibliothèque')
 st.sidebar.markdown('# Bibliothèque ')
 
-liste_auteurs = ['Choisir un auteur', 'Michael McDowell', 'Dean Koontz', 'Stephen King', 'Beatrix Potter']
+liste_auteurs = ['Choisir un auteur', 'Michael McDowell', 'Dean Koontz', 'Stephen King', 'Beatrix Potter', 'Beatrice Sparks','Agatha Christie', 'Sylvie Baron', 'Satoshi Yagisawa','Dennis Lehane', 'Charles Duchaussois','Éléonore Devillepoix','Antonio Moresco' ]
+# liste_auteurs = [liste_auteurs[0]] + sorted(liste_auteurs[1:]) #ordre alaphabetique mais prenom..
+liste_auteurs_tri = [liste_auteurs[0]] + sorted(liste_auteurs[1:], key=lambda x: x.split()[-1]) #ordre alphabetique nom
+
 Titre = st.text_input('Titre: ')
 # Auteur = st.text_input('Auteur: ')
 Auteur = st.selectbox("Auteur", liste_auteurs)
 Resume = st.text_input('Résumé: ')
 Annee = st.number_input("Année: ", step=1)
 Edition = st.text_input('Edition: ')
+
 if Auteur == "Choisir un auteur":
     st.write("Aucun auteur sélectionné")
 liste_auteurs.append(Auteur)
@@ -23,7 +27,7 @@ liste_auteurs.append(Auteur)
 
 if st.button("Ajouter un livre", key="btn_livre"):
     if Auteur == "Choisir un auteur":
-        st.warning("Veuillez sélectionner un auteur")
+        st.warning("TU N'AS PAS SELECTIONNÉ D'AUTEUR MISÉRABLE !!!")
     else:
         data = {
             'Titre': Titre,
@@ -34,7 +38,7 @@ if st.button("Ajouter un livre", key="btn_livre"):
         }
         st.json(data)
 
-    url = "https://.........."
+    url = "http://127.0.0.1:8000/test"
     try:
         response = requests.post(url, json=data)
 
