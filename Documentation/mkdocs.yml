@@ -1,0 +1,9 @@
+site_name: Ma documentation de Pickles
+site_url: https://massaines-cpu.github.io/Pickles/
+nav:
+  - Accueil: index.md
+  - Méthode Agile: agile.md
+theme:
+  name: readthedocs
+  plugins:
+  - search
