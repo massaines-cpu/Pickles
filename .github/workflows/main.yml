@@ -1,0 +1,55 @@
+name: Deploy MkDocs to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ Récupérer le code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2️⃣ Installer Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      # 3️⃣ Installer MkDocs
+      - name: Install dependencies
+        run: |
+          pip install mkdocs mkdocs-material
+
+      # 4️⃣ Nettoyer l’ancien site pour éviter les artefacts multiples
+      - name: Clean previous site
+        working-directory: Documentation
+        run: rm -rf site
+
+      # 5️⃣ Construire le site MkDocs
+      - name: Build MkDocs
+        working-directory: Documentation
+        run: mkdocs build
+
+      # 6️⃣ Upload de l’artefact
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: Documentation/site
+
+      # 7️⃣ Déploiement vers GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
