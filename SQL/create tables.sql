@@ -47,9 +47,9 @@ CREATE TABLE Livre (
     id SERIAL PRIMARY KEY,
     titre VARCHAR(255) NOT NULL,
     resume VARCHAR(255) NOT NULL,
-    annee INTEGER NOT NULL,
+    annee INTEGER,
     serie_id INTEGER,
-    edition_id INTEGER,
+    edition_id INTEGER NOT NULL,
     FOREIGN KEY (serie_id) REFERENCES Serie(id),
     FOREIGN KEY (edition_id) REFERENCES Edition(id)
 );
