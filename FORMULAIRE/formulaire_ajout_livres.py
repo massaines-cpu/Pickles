@@ -31,12 +31,21 @@ if "auteurs" not in st.session_state:
  'Robin Hobb', 'Stephenie Meyer', 'Sylvain Tesson', 'Toni Morrison', 'Virginie Despentes']
 
 if "genres" not in st.session_state:
-    st.session_state.genres = ['Choisir un genre', 'Roman', 'Science-Fiction', 'Fantastique', 'Policier']
+    st.session_state.genres = ['Choisir un genre', 'Roman','Science-Fiction','Fantastique','Policier','Historique','Thriller','Dystopie','Aventure','Heroic-Fantasy','Romance','Horreur','Biographie','Essai','Conte']
+
+if "sagas" not in st.session_state:
+    st.session_state.sagas = ['Choisir une saga', "Harry Potter", "Le Seigneur des Anneaux", "Le Trône de Fer", "Hunger Games", "Dune", "Fondation", "Millénium", "Sherlock Holmes", "La Tour Sombre", "The Witcher", "Le Monde de Narnia", "Twilight", "Percy Jackson", "L'Amie Prodigieuse"]
+
+if "editeurs" not in st.session_state:
+    st.session_state.editeurs = ['Choisir un éditeur', 'Gallimard', 'Hachette', 'Albin Michel', 'Flammarion', 'Grasset', 'Le Seuil', 'Robert Laffont', 'Pocket', 'Folio', 'J\'ai Lu', 'Actes Sud', 'Points', 'Rivages', 'Bragelonne', 'L\'Atalante']
+
+if "editions" not in st.session_state:
+    st.session_state.editions = ['Choisir l\'édition', 'Broché', 'Poche', 'Relié', 'Collector', 'Numérique / E-book', 'Livre Audio', 'Grand Format', 'Édition Limitée', 'Intégrale', 'BD / Roman Graphique', 'Luxe', 'Fac-similé']
 
 #Formulaire
 Titre = st.text_input('Titre*: ')
 Auteur = st.selectbox("Auteur*", st.session_state.auteurs)
-#Ajouter un nouvel auteur
+#ajouter un nouvel auteur
 nouvel_auteur = st.text_input("Ajouter un nouvel auteur")
 
 if st.button("Ajouter l'auteur"):
@@ -49,6 +58,15 @@ if st.button("Ajouter l'auteur"):
             st.warning("Cet auteur existe déjà.")
 Resume = st.text_input('Résumé: ')
 Saga = st.text_input('Saga: ')
+nouvelle_saga = st.text_input("Ajouter une nouvelle saga")
+if st.button("Ajouter une saga"):
+    if nouvelle_saga.strip() != "":
+        if nouvelle_saga not in st.session_state.sagas:
+            st.session_state.saga.append(nouvelle_saga)
+            st.success(f"Saga ajoutée : {nouvelle_saga}")
+            st.rerun()
+        else:
+            st.warning("Cette saga existe déjà.")
 Genre = st.selectbox('Genre*: ', st.session_state.genres)
 #ajouter un nouveau genre
 nouveau_genre = st.text_input("Ajouter un nouveau genre")
@@ -63,12 +81,30 @@ if st.button("Ajouter un genre"):
 
 Annee = st.number_input("Année: ", step=1)
 Edition = st.text_input('Edition*: ')
+nouvelle_edition = st.text_input("Ajouter une nouvelle édition")
+if st.button("Ajouter une édition"):
+    if nouvelle_edition.strip() != "":
+        if nouvelle_edition not in st.session_state.editions:
+            st.session_state.editions.append(nouvelle_edition)
+            st.success(f"Edition ajoutée : {nouvelle_edition}")
+            st.rerun()
+        else:
+            st.warning("Cette édition existe déjà.")
 Editeur = st.text_input('Editeur*: ')
+nouvel_editeur = st.text_input("Ajouter un nouvel éditeur")
+if st.button("Ajouter un éditeur"):
+    if nouvel_editeur.strip() != "":
+        if nouvel_editeur not in st.session_state.editeurs:
+            st.session_state.editeurs.append(nouvel_editeur)
+            st.success(f"Edition ajoutée : {nouvel_editeur}")
+            st.rerun()
+        else:
+            st.warning("Cet éditeur existe déjà.")
 Etat = st.selectbox('Etat*: ', liste_etat)
 Exemplaire = st.number_input('Exemplaire*: ', step=1)
 ISBN = st.number_input('ISBN*: ', step=1)
 
-st.write("Formulaire rempli :", {
+st.write("Formulaire livre rempli :", {
     "Titre": Titre,
     "Auteur": Auteur,
     "Résumé": Resume,
@@ -86,8 +122,8 @@ if st.button('Ajouter ce livre à la bibliothèque'):
     if not Titre.strip(): erreurs.append("Titre")
     if Auteur == "Choisir un auteur": erreurs.append("Auteur")
     if Genre == "Choisir un genre": erreurs.append("Genre")
-    if not Edition.strip(): erreurs.append("Edition")
-    if not Editeur.strip(): erreurs.append("Editeur")
+    if Editeur == 'Choisir un éditeur': erreurs.append("Editeur")
+    if Edition == 'Choisir une édition': erreurs.append("Edition")
     if Etat == "Choisir un état": erreurs.append("Etat")
 
     if erreurs:
@@ -108,8 +144,6 @@ if st.button('Ajouter ce livre à la bibliothèque'):
             'Etat': Etat,
             'ISBN': int(ISBN)
         }
-
-
         # st.json(data)
 
     url = 'http://127.0.0.1:8000/livres'
