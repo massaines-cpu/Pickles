@@ -1,28 +1,39 @@
 from fastapi import FastAPI
-from pydantic import BaseModel  # ← indispensable !
+from pydantic import BaseModel
+from typing import List, Optional
 
 app = FastAPI()
 
 class Livre(BaseModel):
     Titre: str
     Auteur: str
-    Resume: str
+    Resume: Optional[str] = ""
+    Saga: Optional[str] = ""
+    Genre: str
     Annee: int
     Edition: str
+    Editeur: str
+    Etat: str
+    Exemplaire: int
+    ISBN: int
+
+bibliotheque = []
 
 @app.get("/")
 def read_root():
-    return {"message": "Recup OK"}
+    return {"status": "Serveur Bibliothèque Opérationnel"}
 
-bibliotheque = []
+# POST : Pour recevoir les données de Streamlit
 @app.post("/livres")
 def ajouter_livre(livre: Livre):
     bibliotheque.append(livre)
     return {
-        "message": "Livre ajouté en mémoire",
-        "total_livres": len(bibliotheque)
+        "message": "Livre ajouté avec succès",
+        "livre_recu": livre,
+        "total": len(bibliotheque)
     }
 
-@app.get("/livres")
+# GET : Pour renvoyer la liste à Streamlit
+@app.get("/livres", response_model=List[Livre])
 def lister_livres():
     return bibliotheque

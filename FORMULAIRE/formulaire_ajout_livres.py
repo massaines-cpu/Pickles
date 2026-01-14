@@ -34,7 +34,7 @@ if "genres" not in st.session_state:
     st.session_state.genres = ['Choisir un genre', 'Roman','Science-Fiction','Fantastique','Policier','Historique','Thriller','Dystopie','Aventure','Heroic-Fantasy','Romance','Horreur','Biographie','Essai','Conte']
 
 if "sagas" not in st.session_state:
-    st.session_state.sagas = ['Choisir une saga', "Harry Potter", "Le Seigneur des Anneaux", "Le Trône de Fer", "Hunger Games", "Dune", "Fondation", "Millénium", "Sherlock Holmes", "La Tour Sombre", "The Witcher", "Le Monde de Narnia", "Twilight", "Percy Jackson", "L'Amie Prodigieuse"]
+    st.session_state.sagas = ["Ne fait pas partie d'une saga", "Harry Potter", "Le Seigneur des Anneaux", "Le Trône de Fer", "Hunger Games", "Dune", "Fondation", "Millénium", "Sherlock Holmes", "La Tour Sombre", "The Witcher", "Le Monde de Narnia", "Twilight", "Percy Jackson", "L'Amie Prodigieuse"]
 
 if "editeurs" not in st.session_state:
     st.session_state.editeurs = ['Choisir un éditeur', 'Gallimard', 'Hachette', 'Albin Michel', 'Flammarion', 'Grasset', 'Le Seuil', 'Robert Laffont', 'Pocket', 'Folio', 'J\'ai Lu', 'Actes Sud', 'Points', 'Rivages', 'Bragelonne', 'L\'Atalante']
@@ -57,12 +57,12 @@ if st.button("Ajouter l'auteur"):
         else:
             st.warning("Cet auteur existe déjà.")
 Resume = st.text_input('Résumé: ')
-Saga = st.text_input('Saga: ')
+Saga = st.selectbox('Saga: ', st.session_state.sagas)
 nouvelle_saga = st.text_input("Ajouter une nouvelle saga")
 if st.button("Ajouter une saga"):
     if nouvelle_saga.strip() != "":
         if nouvelle_saga not in st.session_state.sagas:
-            st.session_state.saga.append(nouvelle_saga)
+            st.session_state.sagas.append(nouvelle_saga)
             st.success(f"Saga ajoutée : {nouvelle_saga}")
             st.rerun()
         else:
@@ -80,7 +80,7 @@ if st.button("Ajouter un genre"):
             st.warning("Ce genre existe déjà.")
 
 Annee = st.number_input("Année: ", step=1)
-Edition = st.text_input('Edition*: ')
+Edition = st.selectbox('Edition*: ', st.session_state.editions)
 nouvelle_edition = st.text_input("Ajouter une nouvelle édition")
 if st.button("Ajouter une édition"):
     if nouvelle_edition.strip() != "":
@@ -90,7 +90,7 @@ if st.button("Ajouter une édition"):
             st.rerun()
         else:
             st.warning("Cette édition existe déjà.")
-Editeur = st.text_input('Editeur*: ')
+Editeur = st.selectbox('Editeur*: ', st.session_state.editeurs)
 nouvel_editeur = st.text_input("Ajouter un nouvel éditeur")
 if st.button("Ajouter un éditeur"):
     if nouvel_editeur.strip() != "":
@@ -107,8 +107,8 @@ ISBN = st.number_input('ISBN*: ', step=1)
 st.write("Formulaire livre rempli :", {
     "Titre": Titre,
     "Auteur": Auteur,
-    "Résumé": Resume,
-    "Saga": Saga,
+    'Saga': Saga if Saga != "Ne fait pas partie d'une saga" else None,
+    'Resume': Resume if Resume.strip() != "" else None,
     "Genre": Genre,
     "Année": Annee,
     "Edition": Edition,
@@ -123,7 +123,7 @@ if st.button('Ajouter ce livre à la bibliothèque'):
     if Auteur == "Choisir un auteur": erreurs.append("Auteur")
     if Genre == "Choisir un genre": erreurs.append("Genre")
     if Editeur == 'Choisir un éditeur': erreurs.append("Editeur")
-    if Edition == 'Choisir une édition': erreurs.append("Edition")
+    if Edition == 'Choisir une édition': erreurs.append("Editeur")
     if Etat == "Choisir un état": erreurs.append("Etat")
 
     if erreurs:
@@ -134,11 +134,11 @@ if st.button('Ajouter ce livre à la bibliothèque'):
         data = {
             'Titre': Titre,
             'Auteur': Auteur,
-            'Resume': Resume,
+            'Resume': Resume.strip() if Resume.strip() != "" else None,
             'Annee': int(Annee),
             'Edition': Edition,
             'Genre': Genre,
-            'Saga': Saga,
+            'Saga': None if Saga == "Ne fait pas partie d'une saga" else Saga,
             'Editeur': Editeur,
             'Exemplaire': int(Exemplaire),
             'Etat': Etat,
