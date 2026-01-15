@@ -28,7 +28,7 @@ if "editions" not in st.session_state:
 
 #Formulaire
 Titre = st.text_input('Titre*: ')
-Auteur = st.selectbox("Auteur*", st.session_state.auteurs)
+Auteur = st.multiselect("Auteur*", st.session_state.auteurs)
 #ajouter un nouvel auteur
 nouvel_auteur = st.text_input("Ajouter un nouvel auteur")
 
@@ -51,7 +51,7 @@ if st.button("Ajouter une saga"):
             st.rerun()
         else:
             st.warning("Cette saga existe déjà.")
-Genre = st.selectbox('Genre*: ', st.session_state.genres)
+Genre = st.multiselect('Genre*: ', st.session_state.genres)
 #ajouter un nouveau genre
 nouveau_genre = st.text_input("Ajouter un nouveau genre")
 if st.button("Ajouter un genre"):
@@ -64,7 +64,7 @@ if st.button("Ajouter un genre"):
             st.warning("Ce genre existe déjà.")
 
 Annee = st.number_input("Année: ", step=1)
-Edition = st.selectbox('Edition*: ', st.session_state.editions)
+Edition = st.multiselect('Edition*: ', st.session_state.editions)
 nouvelle_edition = st.text_input("Ajouter une nouvelle édition")
 if st.button("Ajouter une édition"):
     if nouvelle_edition.strip() != "":
@@ -114,14 +114,17 @@ if st.button('Ajouter ce livre à la bibliothèque'):
         st.error(f"Non mais écris quelque chose merde...: {', '.join(erreurs)}")
     else:
         # sauvegarder dans ma base de données ou ton fichier JSON
+        auteur_str = ", ".join(Auteur)
+        genre_str = ", ".join(Genre)
+        edition_str = ", ".join(Edition)
         st.success(f"Le livre '{Titre}' a bien été ajouté !")
         data = {
             'Titre': Titre,
-            'Auteur': Auteur,
+            'Auteur': auteur_str,
             'Resume': Resume.strip() if Resume.strip() != "" else None,
             'Annee': int(Annee),
-            'Edition': Edition,
-            'Genre': Genre,
+            'Edition': edition_str,
+            'Genre': genre_str,
             'Saga': None if Saga == "Ne fait pas partie d'une saga" else Saga,
             'Editeur': Editeur,
             'Exemplaire': int(Exemplaire),
