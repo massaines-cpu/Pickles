@@ -12,23 +12,7 @@ if "auteurs" not in st.session_state:
     'Beatrix Potter', 'Beatrice Sparks','Agatha Christie', 'Sylvie Baron', 'Satoshi Yagisawa','Dennis Lehane',
     'Charles Duchaussois','Éléonore Devillepoix','Antonio Moresco', 'Amélie Nothomb', 'Annie Ernaux', 'Antoine de Saint-Exupéry', 'Albert Camus', 'Arthur Conan Doyle',
  'Bernard Werber', 'Boris Vian', 'Colette', 'Dan Brown', 'Douglas Adams',
- 'Edgar Allan Poe', 'Émile Zola', 'Ernest Hemingway', 'Françoise Sagan', 'Frank Herbert',
- 'Frédéric Beigbeder', 'Gabriel García Márquez', 'George Orwell', 'Georges Simenon', 'Gilles Legardinier',
- 'Guillaume Musso', 'Guy de Maupassant', 'H.P. Lovecraft', 'Haruki Murakami', 'Harlan Coben',
- 'Isaac Asimov', 'J.K. Rowling', 'J.R.R. Tolkien', 'Jane Austen', 'Jean d\'Ormesson',
- 'Jean-Christophe Grangé', 'Joël Dicker', 'Ken Follett', 'Leïla Slimani', 'Marcel Proust',
- 'Margaret Atwood', 'Mary Shelley', 'Maxime Chattam', 'Michel Bussi', 'Michel Houellebecq',
- 'Molière', 'Oscar Wilde', 'Paulo Coelho', 'Philip K. Dick', 'Pierre Lemaitre',
- 'René Goscinny', 'Roald Dahl', 'Romain Gary', 'Stendhal', 'Victor Hugo', 'Alain Damasio', 'Alexandre Dumas', 'Andrzej Sapkowski', 'Anne Rice', 'Barjavel',
- 'Baudelaire', 'Céline', 'Christian Bobin', 'Cizia Zykë', 'Colson Whitehead',
- 'Daniel Pennac', 'Don Winslow', 'Elena Ferrante', 'Ellroy James', 'Enki Bilal',
- 'Fred Vargas', 'George R.R. Martin', 'Gustave Flaubert', 'Hervé Bazin', 'Honoré de Balzac',
- 'Ian McEwan', 'Irvine Welsh', 'Jack Kerouac', 'Jack London', 'James Baldwin',
- 'Jean Teulé', 'Jean-Paul Sartre', 'John Steinbeck', 'Julien Gracq', 'Jules Verne',
- 'Katherine Pancol', 'Lao She', 'Laurent Gaudé', 'Lewis Carroll', 'Marlen Haushofer',
- 'Mary Higgins Clark', 'Maurice Druon', 'Maya Angelou', 'Michael Connelly', 'Michel Tournier',
- 'Milan Kundera', 'Neil Gaiman', 'Patrick Modiano', 'Philippe Djian', 'Pierre Bottero',
- 'Robin Hobb', 'Stephenie Meyer', 'Sylvain Tesson', 'Toni Morrison', 'Virginie Despentes']
+ 'Edgar Allan Poe', 'Émile Zola', 'Ernest Hemingway', 'Françoise Sagan', 'Frank Herbert']
 
 if "genres" not in st.session_state:
     st.session_state.genres = ['Choisir un genre', 'Roman','Science-Fiction','Fantastique','Policier','Historique','Thriller','Dystopie','Aventure','Heroic-Fantasy','Romance','Horreur','Biographie','Essai','Conte']
@@ -62,7 +46,7 @@ nouvelle_saga = st.text_input("Ajouter une nouvelle saga")
 if st.button("Ajouter une saga"):
     if nouvelle_saga.strip() != "":
         if nouvelle_saga not in st.session_state.sagas:
-            st.session_state.sagas.append(nouvelle_saga)
+            st.session_state.saga.append(nouvelle_saga)
             st.success(f"Saga ajoutée : {nouvelle_saga}")
             st.rerun()
         else:
