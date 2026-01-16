@@ -11,14 +11,14 @@ if "amis_details" not in st.session_state:
         {"Nom": "Lebron James", "École": "NBA High", "Téléphone": "0611223344"}
     ]
 
-# 2. LISTE DES AMIS
+#2 LISTE DES AMIS
 st.subheader("Liste des amis")
 df_amis = pd.DataFrame(st.session_state.amis_details)
 st.dataframe(df_amis, use_container_width=True, hide_index=True)
 
 st.divider()
 
-# 3. AJOUTER UN AMI
+#3 AJOUTER UN AMI
 st.subheader("Ajouter un nouvel ami dans l'annuaire")
 col1, col2, col3 = st.columns(3)
 with col1:
@@ -93,7 +93,7 @@ try:
                     res_put = requests.put(url, json=payload)
 
                     if res_put.status_code == 200:
-                        st.success(f"✅ Prêt enregistré ! {titre_choisi} ({etat_prete}) est chez {ami_choisi}.")
+                        st.success(f"Prêt enregistré ! {titre_choisi} ({etat_prete}) est chez {ami_choisi}.")
                     else:
                         st.error("Erreur lors de la mise à jour du serveur.")
                 else:

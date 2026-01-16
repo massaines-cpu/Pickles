@@ -2,19 +2,45 @@ import streamlit as st
 import requests
 import pandas as pd
 
+Api_url = 'http://127.0.0.1:8000'
 st.title("La bibliothèque de Maxime")
 
 response = requests.get('http://127.0.0.1:8000/livres')
 if response.status_code == 200:
     livres = response.json()
+    print(livres)
     if livres:
-        df = pd.DataFrame(livres)
-        #on affiche les colonnes importantes
-        st.dataframe(df[['Titre', 'Auteur', 'Exemplaire', 'Etat', 'Emprunteur', 'Genre', 'Saga', 'Editeur', 'Edition']], use_container_width=True)
+        df_livres = pd.DataFrame(livres)
+        print('coucou')
 
+        df_livres["Auteurs"] = df_livres["auteurs"].apply(lambda x: ", ".join(x))
+        df_livres["Genres"] = df_livres["genres"].apply(lambda x: ", ".join(x))
+
+        # On ne montre que les colonnes utiles
+        df_display = df_livres[[
+            "id", "titre", "serie", "editeur", "edition", "annee",
+            "Auteurs", "Genres", "exemplaires", "isbn"
+        ]]
+        st.dataframe(df_display)
+        # df = pd.DataFrame(livres)
+        # #on affiche les colonnes importantes
+        # # st.dataframe(df[['Titre', 'Auteur', 'Exemplaire', 'Etat', 'Emprunteur', 'Genre', 'Saga', 'Editeur', 'Edition']], use_container_width=True)
+        # st.dataframe(df[['id', 'titre', 'resume', 'annee', 'serie', 'editeur', 'edition', 'isbn', 'exemplaire', 'auteur', 'genres']], use_container_width=True)
     else:
         st.write("La bibliothèque de Maxime est vide (la honte).")
 
+def fetch(endpoint):
+    try:
+        response = requests.get(f'{Api_url}{endpoint}')
+        if response.status_code == 200:
+            print([item['nom'] for item in response.json()])
+            return [item['nom'] for item in response.json()]
+        return []
+    except:
+        return []
+
+liste_auteurs = fetch('auteurs')
+st.write(liste_auteurs)
 
 
 
