@@ -84,8 +84,21 @@ if st.button("Ajouter un éditeur"):
             st.rerun()
         else:
             st.warning("Cet éditeur existe déjà.")
-Etat = st.selectbox('Etat*: ', liste_etat)
-Exemplaire = st.number_input('Exemplaire*: ', step=1)
+
+Exemplaire = st.number_input('Nombre d\'exemplaires*:', min_value=1, value=1, step=1)
+etats_exemplaires = []
+if Exemplaire > 0:
+    st.write("États des exemplaires")
+    cols = st.columns(2) #2 colonnes pour gagner de la place
+    for i in range(int(Exemplaire)):
+        # On utilise l'index i pour créer une clé unique par exemplaire
+        with cols[i % 2]:
+            etat = st.selectbox(
+                f"État de l'exemplaire n°{i+1}*",
+                liste_etat,
+                key=f"etat_{i}"
+            )
+            etats_exemplaires.append(etat)
 ISBN = st.number_input('ISBN*: ', step=1)
 
 st.write("Formulaire livre rempli :", {
@@ -97,7 +110,7 @@ st.write("Formulaire livre rempli :", {
     "Année": Annee,
     "Edition": Edition,
     "Editeur": Editeur,
-    "Etat": Etat,
+    "Etat": etats_exemplaires,
     "Exemplaire": Exemplaire,
     "ISBN": ISBN
 })
@@ -108,7 +121,9 @@ if st.button('Ajouter ce livre à la bibliothèque'):
     if Genre == "Choisir un genre": erreurs.append("Genre")
     if Editeur == 'Choisir un éditeur': erreurs.append("Editeur")
     if Edition == 'Choisir une édition': erreurs.append("Editeur")
-    if Etat == "Choisir un état": erreurs.append("Etat")
+    # if Etat == "Choisir un état": erreurs.append("Etat")
+    if "Choisir un état" in etats_exemplaires:
+        erreurs.append("État (un ou plusieurs exemplaires n'ont pas d'état)")
 
     if erreurs:
         st.error(f"Non mais écris quelque chose merde...: {', '.join(erreurs)}")
@@ -117,6 +132,7 @@ if st.button('Ajouter ce livre à la bibliothèque'):
         auteur_str = ", ".join(Auteur)
         genre_str = ", ".join(Genre)
         edition_str = ", ".join(Edition)
+        etat_str = ", ".join(etats_exemplaires)
         st.success(f"Le livre '{Titre}' a bien été ajouté !")
         data = {
             'Titre': Titre,
@@ -128,7 +144,7 @@ if st.button('Ajouter ce livre à la bibliothèque'):
             'Saga': None if Saga == "Ne fait pas partie d'une saga" else Saga,
             'Editeur': Editeur,
             'Exemplaire': int(Exemplaire),
-            'Etat': Etat,
+            'Etat': etat_str,
             'ISBN': int(ISBN)
         }
         # st.json(data)

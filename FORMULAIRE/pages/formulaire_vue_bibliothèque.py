@@ -10,7 +10,7 @@ if response.status_code == 200:
     if livres:
         df = pd.DataFrame(livres)
         #on affiche les colonnes importantes
-        st.dataframe(df[['Titre', 'Auteur', 'Exemplaire', 'Emprunteur', 'Genre', 'Saga', 'Editeur', 'Edition']], use_container_width=True)
+        st.dataframe(df[['Titre', 'Auteur', 'Exemplaire', 'Etat', 'Emprunteur', 'Genre', 'Saga', 'Editeur', 'Edition']], use_container_width=True)
 
     else:
         st.write("La bibliothèque de Maxime est vide (la honte).")
