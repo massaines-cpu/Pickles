@@ -1,4 +1,4 @@
-# main.py
+# PicklesAPI.py
 from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import List, Optional, Literal
@@ -60,7 +60,7 @@ def get_conn():
         host="127.0.0.1",
         dbname="PicklesBase",
         user="postgres",
-        password="Dompte2024!_!"
+        password="admin"
     )
 
 
@@ -94,7 +94,7 @@ def ajout_livre(data: LivreModel):
         # --- Premier exemplaire (nécessaire pour Edition) ---
         cursor.execute(
             "INSERT INTO Exemplaire (etat, ami_id, edition_id) VALUES (%s, %s, NULL) RETURNING id",
-            (data.etat, 1)  # ami_id = 1 par défaut pour test
+            (data.etat, 1)
         )
         ex_id = cursor.fetchone()[0]
 
@@ -167,6 +167,7 @@ def get_auteurs():
     rows = cursor.fetchall()
     cursor.close()
     conn.close()
+    print([{"id": r[0], "nom": r[1]} for r in rows])
     return [{"id": r[0], "nom": r[1]} for r in rows]
 
 
