@@ -143,7 +143,7 @@ INSERT INTO Editeur (Nom) VALUES
 -- =========================
 -- AMI (30)
 -- =========================
-INSERT INTO Ami (Nom, "Téléphone", Ecole) VALUES
+INSERT INTO Ami (Nom, Téléphone, Ecole) VALUES
 ('Alice Martin','0600000001','Sorbonne'),
 ('Lucas Bernard','0600000002','ENS'),
 ('Emma Dubois','0600000003','Polytechnique'),
@@ -189,7 +189,7 @@ INSERT INTO Exemplaire (Etat, Ami) VALUES
 -- =========================
 -- EDITION (30)
 -- =========================
-INSERT INTO Edition (Nom, "Année", ISBN, Editeur, Exemplaire) VALUES
+INSERT INTO Edition (Nom, Année, ISBN, Editeur, Exemplaire) VALUES
 ('Harry Potter à l’école des sorciers',1998,'9782070584628',1,1),
 ('La Chambre des secrets',1999,'9782070584642',1,2),
 ('Le Prisonnier d’Azkaban',2000,'9782070584925',1,3),
@@ -224,7 +224,7 @@ INSERT INTO Edition (Nom, "Année", ISBN, Editeur, Exemplaire) VALUES
 -- =========================
 -- LIVRE (30)
 -- =========================
-INSERT INTO Livre (Titre, "Résumé", "Année", Serie, Genre, Auteur, Edition) VALUES
+INSERT INTO Livre (Titre, Résumé, Année, Série, Genre, Auteur, Edition) VALUES
 ('Harry Potter 1','Un jeune sorcier découvre la magie',1997,1,1,1,1),
 ('Harry Potter 2','La chambre des secrets est ouverte',1998,1,1,1,2),
 ('Harry Potter 3','Un prisonnier s’évade d’Azkaban',1999,1,1,1,3),
@@ -255,5 +255,22 @@ INSERT INTO Livre (Titre, "Résumé", "Année", Serie, Genre, Auteur, Edition) V
 ('Les Robots','IA et éthique',1950,15,2,3,9),
 ('Assassin Royal','Apprentissage royal',1995,12,1,12,14),
 ('Chroniques de Narnia','Monde magique',1950,19,22,17,11);
+
+-- =========================
+-- LIVREAUTEUR (30)
+-- =========================
+INSERT INTO LivreAuteur (idLivre, idAuteur) VALUES
+(1, 1),(2, 1),(3, 1),(4, 1),(5, 2),(6, 2),(7, 3),(8, 4),
+(9, 21),(10, 22),(11, 9),(12, 27),(13, 28),(14, 29),(15, 23),
+(16, 15),(17, 25),(18, 30),(19, 19),(20, 20),(21, 24),(22, 26),
+(23, 27),(24, 28),(25, 16),(26, 6),(27, 10),(28, 3),(29, 12),(30, 17);
+
+-- =========================
+-- LIVREGENRE (30)
+-- =========================
+INSERT INTO LivreGenre (idLivre, idGenre) VALUES
+(1,1),(2,1),(3,1),(4,1),(5,13),(6,13),(7,2),(8,2),(9,10),(10,10),
+(11,13),(12,2),(13,10),(14,1),(15,12),(16,20),(17,20),(18,10),(19,18),
+(20,18),(21,4),(22,26),(23,24),(24,27),(25,1),(26,10),(27,14),(28,2),(29,1),(30,22);
 
 COMMIT;
