@@ -73,7 +73,7 @@ try:
 
             if st.button("Valider le prêt"):
                 if ami_choisi != "Choisir un ami":
-                    # --- LOGIQUE DE MISE À JOUR ---
+                    #
                     # 1. Calcul du nouveau stock
                     nouveau_stock = livre_data['Exemplaire'] - 1
 

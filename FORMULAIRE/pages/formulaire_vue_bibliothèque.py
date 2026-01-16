@@ -8,10 +8,10 @@ st.title("La bibliothèque de Maxime")
 response = requests.get('http://127.0.0.1:8000/livres')
 if response.status_code == 200:
     livres = response.json()
-    print(livres)
+
     if livres:
         df_livres = pd.DataFrame(livres)
-        print('coucou')
+
 
         df_livres["Auteurs"] = df_livres["auteurs"].apply(lambda x: ", ".join(x))
         df_livres["Genres"] = df_livres["genres"].apply(lambda x: ", ".join(x))
@@ -33,7 +33,7 @@ def fetch(endpoint):
     try:
         response = requests.get(f'{Api_url}{endpoint}')
         if response.status_code == 200:
-            print([item['nom'] for item in response.json()])
+            # print([item['nom'] for item in response.json()])
             return [item['nom'] for item in response.json()]
         return []
     except:

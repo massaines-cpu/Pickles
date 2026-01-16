@@ -27,8 +27,8 @@ if "editions" not in st.session_state:
     st.session_state.editions = ['Choisir l\'édition', 'Broché', 'Poche', 'Relié', 'Collector', 'Numérique / E-book', 'Livre Audio', 'Grand Format', 'Édition Limitée', 'Intégrale', 'BD / Roman Graphique', 'Luxe', 'Fac-similé']
 
 #Formulaire
-Titre = st.text_input('Titre*: ')
-Auteur = st.multiselect("Auteur*", st.session_state.auteurs)
+Titre = st.text_input('Titre*: ', key="id_titre")
+Auteur = st.multiselect("Auteur*", st.session_state.auteurs, key="id_auteurs")
 #ajouter un nouvel auteur
 nouvel_auteur = st.text_input("Ajouter un nouvel auteur")
 
@@ -41,7 +41,7 @@ if st.button("Ajouter l'auteur"):
         else:
             st.warning("Cet auteur existe déjà.")
 Resume = st.text_input('Résumé: ')
-Saga = st.selectbox('Saga: ', st.session_state.sagas)
+Saga = st.selectbox('Saga: ', st.session_state.sagas, key="id_saga")
 nouvelle_saga = st.text_input("Ajouter une nouvelle saga")
 if st.button("Ajouter une saga"):
     if nouvelle_saga.strip() != "":
@@ -51,7 +51,7 @@ if st.button("Ajouter une saga"):
             st.rerun()
         else:
             st.warning("Cette saga existe déjà.")
-Genre = st.multiselect('Genre*: ', st.session_state.genres)
+Genre = st.multiselect('Genre*: ', st.session_state.genres, key="id_genre")
 #ajouter un nouveau genre
 nouveau_genre = st.text_input("Ajouter un nouveau genre")
 if st.button("Ajouter un genre"):
@@ -64,7 +64,7 @@ if st.button("Ajouter un genre"):
             st.warning("Ce genre existe déjà.")
 
 Annee = st.number_input("Année: ", step=1)
-Edition = st.multiselect('Edition*: ', st.session_state.editions)
+Edition = st.multiselect('Edition*: ', st.session_state.editions, key="id_edition")
 nouvelle_edition = st.text_input("Ajouter une nouvelle édition")
 if st.button("Ajouter une édition"):
     if nouvelle_edition.strip() != "":
@@ -74,7 +74,7 @@ if st.button("Ajouter une édition"):
             st.rerun()
         else:
             st.warning("Cette édition existe déjà.")
-Editeur = st.selectbox('Editeur*: ', st.session_state.editeurs)
+Editeur = st.selectbox('Editeur*: ', st.session_state.editeurs, key="id_editeur")
 nouvel_editeur = st.text_input("Ajouter un nouvel éditeur")
 if st.button("Ajouter un éditeur"):
     if nouvel_editeur.strip() != "":
@@ -87,18 +87,36 @@ if st.button("Ajouter un éditeur"):
 
 Exemplaire = st.number_input('Nombre d\'exemplaires*:', min_value=1, value=1, step=1)
 etats_exemplaires = []
+
 if Exemplaire > 0:
-    st.write("États des exemplaires")
-    cols = st.columns(2) #2 colonnes pour gagner de la place
+    st.write("Détails des exemplaires")
     for i in range(int(Exemplaire)):
-        # On utilise l'index i pour créer une clé unique par exemplaire
-        with cols[i % 2]:
-            etat = st.selectbox(
-                f"État de l'exemplaire n°{i+1}*",
-                liste_etat,
-                key=f"etat_{i}"
-            )
-            etats_exemplaires.append(etat)
+        st.write(f"**Exemplaire n°{i + 1}**")
+        col_ed, col_et = st.columns(2)
+
+        with col_ed:
+            # ID unique grâce à key=f"edition_{i}"
+            ed_val = st.selectbox(f"Édition n°{i + 1}", st.session_state.editions, key=f"edition_{i}")
+        with col_et:
+            # ID unique grâce à key=f"etat_{i}"
+            et_val = st.selectbox(f"État n°{i + 1}", liste_etat, key=f"etat_{i}")
+
+        # On enregistre la combinaison
+        etats_exemplaires.append(f"{ed_val} ({et_val})")
+
+# etats_exemplaires = []
+# if Exemplaire > 0:
+#     st.write("États des exemplaires")
+#     cols = st.columns(2) #2 colonnes pour gagner de la place
+#     for i in range(int(Exemplaire)):
+#         # On utilise l'index i pour créer une clé unique par exemplaire
+#         with cols[i % 2]:
+#             etat = st.selectbox(
+#                 f"État de l'exemplaire n°{i+1}*",
+#                 liste_etat,
+#                 key=f"etat_{i}"
+#             )
+#             etats_exemplaires.append(etat)
 ISBN = st.number_input('ISBN*: ', step=1)
 
 st.write("Formulaire livre rempli :", {
