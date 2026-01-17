@@ -1,10 +1,7 @@
 import streamlit as st
 import requests
 import pandas as pd
-import sys
-import os
-from LienApi import recup_options
-
+from LienApi import LienApi
 
 Api_url = 'http://127.0.0.1:8000'
 st.title("La bibliothèque de Maxime")

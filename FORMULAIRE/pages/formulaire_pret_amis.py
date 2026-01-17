@@ -1,31 +1,31 @@
 import streamlit as st
 import requests
 import pandas as pd
-from LienApi import recup_options
+from LienApi import LienApi
 
 st.title("Gestion des amis & prêts")
 
 # 1. INITIALISATION DE L'ANNUAIRE
 if "amis_details" not in st.session_state:
-    st.session_state.amis_details= recup_options("amis")
+    st.session_state.amis_details= LienApi.recup_options("amis")
+    print(st.session_state.amis_details)
 
 #2 LISTE DES AMIS
 st.subheader("Liste des amis")
-if st.session_state.amis_details:
+if st.session_state.amis_details and isinstance(st.session_state.amis_details[0], dict):
     df_amis = pd.DataFrame(st.session_state.amis_details)
-    if 'id' in df_amis.columns:
-        df_amis = df_amis.drop(columns=['id'])
-    noms_propres = {
+    cols_to_show = ["nom", "telephone", "ecole"]
+    df_amis = df_amis[[c for c in cols_to_show if c in df_amis.columns]]
+
+    df_amis = df_amis.rename(columns={
         "nom": "Nom",
         "telephone": "Téléphone",
         "ecole": "École / Établissement"
-    }
-    df_amis = df_amis.rename(columns=noms_propres)
-
-    # Affichage
+    })
     st.dataframe(df_amis, width="stretch", hide_index=True)
 else:
-    st.info("Aucun ami trouvé dans la base de données.")
+    st.info("Aucun ami trouvé ou format de données incorrect.")
+
 st.divider()
 
 st.subheader("Ajouter un nouvel ami dans l'annuaire")

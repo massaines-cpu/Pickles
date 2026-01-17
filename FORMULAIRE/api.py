@@ -216,11 +216,14 @@ def get_editeurs():
 def get_amis():
     conn = get_conn()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM Ami")
+    cursor.execute("SELECT id, nom, telephone, ecole FROM Amis")
     rows = cursor.fetchall()
     cursor.close()
     conn.close()
+    # Retourne une liste de dictionnaires
     return [{"id": r[0], "nom": r[1], "telephone": r[2], "ecole": r[3]} for r in rows]
+
+
 # ----------------------------
 # VISUALISER, SUPPRIMER, REMETTRE DISPONIBLE
 # ----------------------------
