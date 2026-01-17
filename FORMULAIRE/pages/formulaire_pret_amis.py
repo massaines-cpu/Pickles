@@ -85,7 +85,7 @@ try:
         if isinstance(st.session_state.amis_details, list):
             for ami in st.session_state.amis_details:
                 if isinstance(ami, dict):
-                    noms_list.append(ami.get('nom', 'Inconnu'))
+                    noms_list.append(ami.get('nom'))
                 else:
                     noms_list.append(str(ami))
         ami_choisi = st.selectbox("Qui emprunte le livre ?", noms_list)
