@@ -1,6 +1,10 @@
 import streamlit as st
 import requests
 import pandas as pd
+import sys
+import os
+from LienApi import recup_options
+
 
 Api_url = 'http://127.0.0.1:8000'
 st.title("La bibliothèque de Maxime")
@@ -17,11 +21,14 @@ if response.status_code == 200:
         df_livres["Genres"] = df_livres["genres"].apply(lambda x: ", ".join(x))
 
         # On ne montre que les colonnes utiles
-        df_display = df_livres[[
+        colonnes_utiles = [
             "id", "titre", "serie", "editeur", "edition", "annee",
-            "Auteurs", "Genres", "exemplaires", "isbn"
-        ]]
-        st.dataframe(df_display)
+            "auteurs", "genres", "exemplaires", "isbn"
+        ]
+        df_display = df_livres[[c for c in colonnes_utiles if c in df_livres.columns]]
+
+
+        st.dataframe(df_display, width="stretch", hide_index=True)
         # df = pd.DataFrame(livres)
         # #on affiche les colonnes importantes
         # # st.dataframe(df[['Titre', 'Auteur', 'Exemplaire', 'Etat', 'Emprunteur', 'Genre', 'Saga', 'Editeur', 'Edition']], use_container_width=True)

@@ -191,6 +191,16 @@ def get_series():
     conn.close()
     return [{"id": r[0], "nom": r[1]} for r in rows]
 
+@app.get("/edition")
+def get_series():
+    conn = get_conn()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM Edition")
+    rows = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return [{"id": r[0], "nom": r[1]} for r in rows]
+
 
 @app.get("/editeurs")
 def get_editeurs():
@@ -202,7 +212,15 @@ def get_editeurs():
     conn.close()
     return [{"id": r[0], "nom": r[1]} for r in rows]
 
-
+@app.get("/amis")
+def get_amis():
+    conn = get_conn()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM Ami")
+    rows = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return [{"id": r[0], "nom": r[1], "telephone": r[2], "ecole": r[3]} for r in rows]
 # ----------------------------
 # VISUALISER, SUPPRIMER, REMETTRE DISPONIBLE
 # ----------------------------
