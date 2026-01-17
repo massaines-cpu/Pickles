@@ -17,7 +17,6 @@ st.title("Gestion des ami.es & prêts")
 # 1. INITIALISATION DE L'ANNUAIRE
 if "amis_details" not in st.session_state:
     st.session_state.amis_details= recup_options("amis")
-    print(st.session_state.amis_details)
 
 #2 LISTE DES AMIS
 st.subheader("Liste des ami.es")
