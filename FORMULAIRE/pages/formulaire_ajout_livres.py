@@ -64,16 +64,16 @@ if st.button("Ajouter un genre"):
             st.warning("Ce genre existe déjà.")
 
 Annee = st.number_input("Année: ", step=1)
-Edition = st.multiselect('Edition*: ', st.session_state.editions, key="id_edition")
-nouvelle_edition = st.text_input("Ajouter une nouvelle édition")
-if st.button("Ajouter une édition"):
-    if nouvelle_edition.strip() != "":
-        if nouvelle_edition not in st.session_state.editions:
-            st.session_state.editions.append(nouvelle_edition)
-            st.success(f"Edition ajoutée : {nouvelle_edition}")
-            st.rerun()
-        else:
-            st.warning("Cette édition existe déjà.")
+# Edition = st.multiselect('Edition*: ', st.session_state.editions, key="id_edition")
+# nouvelle_edition = st.text_input("Ajouter une nouvelle édition")
+# if st.button("Ajouter une édition"):
+#     if nouvelle_edition.strip() != "":
+#         if nouvelle_edition not in st.session_state.editions:
+#             st.session_state.editions.append(nouvelle_edition)
+#             st.success(f"Edition ajoutée : {nouvelle_edition}")
+#             st.rerun()
+#         else:
+#             st.warning("Cette édition existe déjà.")
 Editeur = st.selectbox('Editeur*: ', st.session_state.editeurs, key="id_editeur")
 nouvel_editeur = st.text_input("Ajouter un nouvel éditeur")
 if st.button("Ajouter un éditeur"):
@@ -126,7 +126,7 @@ st.write("Formulaire livre rempli :", {
     'Resume': Resume if Resume.strip() != "" else None,
     "Genre": Genre,
     "Année": Annee,
-    "Edition": Edition,
+    "Edition": etats_exemplaires,
     "Editeur": Editeur,
     "Etat": etats_exemplaires,
     "Exemplaire": Exemplaire,
@@ -149,28 +149,27 @@ if st.button('Ajouter ce livre à la bibliothèque'):
         # sauvegarder dans ma base de données ou ton fichier JSON
         auteur_str = ", ".join(Auteur)
         genre_str = ", ".join(Genre)
-        edition_str = ", ".join(Edition)
         etat_str = ", ".join(etats_exemplaires)
         st.success(f"Le livre '{Titre}' a bien été ajouté !")
         data = {
-            'Titre': Titre,
-            'Auteur': auteur_str,
-            'Resume': Resume.strip() if Resume.strip() != "" else None,
-            'Annee': int(Annee),
-            'Edition': edition_str,
-            'Genre': genre_str,
-            'Saga': None if Saga == "Ne fait pas partie d'une saga" else Saga,
-            'Editeur': Editeur,
-            'Exemplaire': int(Exemplaire),
-            'Etat': etat_str,
-            'ISBN': int(ISBN)
+            'titre': Titre,
+            'auteurs': Auteur,
+            'resume': Resume.strip() if Resume.strip() != "" else None,
+            'annee': int(Annee),
+            'edition': etats_exemplaires[0].split(" (")[0] if Exemplaire == 1 else "Editions multiples",
+            'genres': Genre,
+            'saga': None if Saga == "Ne fait pas partie d'une saga" else Saga,
+            'editeur': Editeur,
+            'exemplaires': int(Exemplaire),
+            'etat': ", ".join(etats_exemplaires),
+            'isbn': str(ISBN) #avant javais mis int
         }
         # st.json(data)
 
     url = 'http://127.0.0.1:8000/livres'
     try:
         response = requests.post(url, json=data)
-        resp_json = response.json() #pourrecup
+        # resp_json = response.json() #pourrecup
 
         if response.status_code == 200:
             st.success('Livre ajouté')

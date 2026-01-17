@@ -52,7 +52,7 @@ try:
     # Récupération des livres via l'API
     res = requests.get('http://127.0.0.1:8000/livres')
     livres = res.json()
-    options_livres = {livre['Titre']: livre for livre in livres if livre.get('Exemplaire', 0) > 0}
+    options_livres = {livre['titre']: livre for livre in livres if livre.get('exemplaires', 0) > 0}
 
     col_a, col_b = st.columns(2)
 
@@ -65,7 +65,7 @@ try:
 
     if titre_choisi != "Choisir un livre":
         livre_data = options_livres[titre_choisi]
-        etats_bruts = livre_data.get('Etat', "")
+        etats_bruts = livre_data.get('etat', "")
         etats_possibles = [e.strip() for e in etats_bruts.split(",") if e.strip()]
 
         if etats_possibles:
@@ -75,18 +75,18 @@ try:
                 if ami_choisi != "Choisir un ami":
                     #
                     # 1. Calcul du nouveau stock
-                    nouveau_stock = livre_data['Exemplaire'] - 1
+                    nouveau_stock = livre_data['exemplaire'] - 1
 
                     # 2. Retirer l'état prêté de la liste
                     etats_possibles.remove(etat_prete)
                     nouveaux_etats_str = ", ".join(etats_possibles)
 
                     # 3. Préparation des données pour l'API
-                    url = f"http://127.0.0.1:8000/livres/{titre_choisi}"
+                    url = f"http://127.0.0.1:8000/livres/{livre_data['id']}"
                     payload = {
-                        "Exemplaire": nouveau_stock,
-                        "Emprunteur": ami_choisi,
-                        "Etat": nouveaux_etats_str
+                        "exemplaire": nouveau_stock,
+                        "emprunteur": ami_choisi,
+                        "etat": nouveaux_etats_str
                     }
 
                     # 4. Envoi de la requête PUT

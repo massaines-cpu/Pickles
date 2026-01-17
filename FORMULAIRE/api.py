@@ -44,7 +44,7 @@ class LivreModel(BaseModel):
     serie: str
     edition: str
     editeur: str
-    etat: Literal['Tres bon', 'Bon', 'Mauvais']
+    etat: Literal['Très bon', 'Bon', 'Mauvais', 'Neuf'] #ou juste str
     exemplaires: int
     isbn: str
 

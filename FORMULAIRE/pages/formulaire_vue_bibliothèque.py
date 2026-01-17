@@ -27,7 +27,7 @@ if response.status_code == 200:
         # # st.dataframe(df[['Titre', 'Auteur', 'Exemplaire', 'Etat', 'Emprunteur', 'Genre', 'Saga', 'Editeur', 'Edition']], use_container_width=True)
         # st.dataframe(df[['id', 'titre', 'resume', 'annee', 'serie', 'editeur', 'edition', 'isbn', 'exemplaire', 'auteur', 'genres']], use_container_width=True)
     else:
-        st.write("La bibliothèque de Maxime est vide (la honte).")
+        st.write("La bibliothèque de Maxime est vide.")
 
 def fetch(endpoint):
     try:
