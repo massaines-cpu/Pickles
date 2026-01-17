@@ -1,30 +1,57 @@
 import streamlit as st
 import requests
 import datetime
-from LienApi import LienApi
+
+# def recup_options(endpoint):
+#     try:
+#         res = requests.get(f"http://127.0.0.1:8000/{endpoint}")
+#         if res.status_code == 200:
+#             items = res.json()
+#
+#             return [item['nom'] for item in items]
+#         return []
+#     except Exception as e:
+#         print(f"Erreur API sur {endpoint}: {e}")
+#         return []
+def recup_options(endpoint):
+    try:
+        # Attention : utilisez "amis" en minuscules pour correspondre à votre API @app.get("/amis")
+        res = requests.get(f"http://127.0.0.1:8000/{endpoint.lower()}")
+        if res.status_code == 200:
+            return res.json()  # On renvoie la liste complète de dictionnaires
+        return []
+    except Exception as e:
+        st.error(f"Erreur API sur {endpoint}: {e}")
+        return []
 
 st.markdown('# Bibliothèque de Maxime')
 st.sidebar.markdown('# Bibliothèque de Maxime ')
+# Affiche ce que l'API renvoie réellement dans la barre latérale
+if st.sidebar.button("Debug API"):
+    st.sidebar.write("Auteurs:", recup_options("auteurs"))
+    st.sidebar.write("Editions:", recup_options("edition"))
 
-liste_etat = ['Choisir un état', 'Mauvais', 'Bon', 'Très Bon', 'Neuf']
+liste_etat = ['Choisir un état', 'Mauvais', 'Bon', 'Très bon', 'Neuf']
 if "auteurs" not in st.session_state:
-    st.session_state.auteurs = LienApi.recup_options("auteurs")
+    st.session_state.auteurs = recup_options("auteurs")
 
 if "genres" not in st.session_state:
-    st.session_state.genres = LienApi.recup_options("genres")
+    st.session_state.genres  = recup_options("genres")
+
     # st.session_state.genres = ['Choisir un genre', 'Roman','Science-Fiction','Fantastique','Policier','Historique','Thriller','Dystopie','Aventure','Heroic-Fantasy','Romance','Horreur','Biographie','Essai','Conte']
 
 if "series" not in st.session_state:
-    st.session_state.series = LienApi.recup_options("series")
+    les_series = recup_options("series")
+    st.session_state.series = ['Aucune'] + les_series
     # st.session_state.sagas = ["Ne fait pas partie d'une saga", "Harry Potter", "Le Seigneur des Anneaux", "Le Trône de Fer", "Hunger Games", "Dune", "Fondation", "Millénium", "Sherlock Holmes", "La Tour Sombre", "The Witcher", "Le Monde de Narnia", "Twilight", "Percy Jackson", "L'Amie Prodigieuse"]
 
 if "editeurs" not in st.session_state:
-    st.session_state.editeurs = LienApi.recup_options("editeurs")
+    st.session_state.editeurs = recup_options("editeurs")
     # st.session_state.editeurs = ['Choisir un éditeur', 'Gallimard', 'Hachette', 'Albin Michel', 'Flammarion', 'Grasset', 'Le Seuil', 'Robert Laffont', 'Pocket', 'Folio', 'J\'ai Lu', 'Actes Sud', 'Points', 'Rivages', 'Bragelonne', 'L\'Atalante']
 
 
 if "editions" not in st.session_state:
-    st.session_state.editions = LienApi.recup_options("edition")
+    st.session_state.editions = recup_options("edition")
     # st.session_state.editions = ['Choisir l\'édition', 'Broché', 'Poche', 'Relié', 'Collector', 'Numérique / E-book', 'Livre Audio', 'Grand Format', 'Édition Limitée', 'Intégrale', 'BD / Roman Graphique', 'Luxe', 'Fac-similé']
 
 #Formulaire
@@ -45,12 +72,11 @@ Serie = st.selectbox('Série: ', st.session_state.series, key="id_serie")
 nouvelle_saga = st.text_input("Ajouter une nouvelle saga")
 if st.button("Ajouter une saga"):
     if nouvelle_saga.strip() != "":
-        if nouvelle_saga not in st.session_state.sagas:
-            st.session_state.saga.append(nouvelle_saga)
+        if nouvelle_saga not in st.session_state.series:
+            st.session_state.series.append(nouvelle_saga) # Ajoute le S ici aussi
             st.success(f"Série ajoutée : {nouvelle_saga}")
             st.rerun()
-        else:
-            st.warning("Cette série existe déjà.")
+
 Genre = st.multiselect('Genre*: ', st.session_state.genres, key="id_genre")
 nouveau_genre = st.text_input("Ajouter un nouveau genre")
 if st.button("Ajouter un genre"):
@@ -128,23 +154,30 @@ if st.button('Ajouter ce livre à la bibliothèque'):
     if Annee < 1450 or Annee > annee_actuelle:
         erreurs.append("Année invalide")
     if any("Choisir" in s for s in etats_exemplaires):
-        erreurs.append("État/Édition non sélectionné")
+        erreurs.append("État/Édition non sélectionné.e(s)")
 
     if erreurs:
-        st.error(f"Oups ! Il manque des infos : {', '.join(erreurs)}")
+        st.error(f"IL MANQUE DES INFOS HEHO : {', '.join(erreurs)}")
     else:
-
+        etat_brut = etats_exemplaires[0].split("(")[-1].replace(")", "").strip()
+        mapping_etats = {
+            "mauvais": "Mauvais",
+            "bon": "Bon",
+            "très bon": "Très bon",
+            "neuf": "Neuf"
+        }
+        etat_final = mapping_etats.get(etat_brut.lower(), etat_brut)
         data = {
             'titre': Titre,
             'auteurs': Auteur,
             'resume': Resume.strip() if Resume.strip() != "" else None,
-            'annee': int(Annee),
-            'edition': etats_exemplaires[0].split(" (")[0] if Exemplaire == 1 else "Editions multiples",
+            'annee': str(Annee),
+            'edition': etats_exemplaires[0].split(" (")[0],  # Juste "Poche"
             'genres': Genre,
-            'serie': None if Serie == "Ne fait pas partie d'une série" else Serie,
+            'serie': "" if Serie == "Aucune" else Serie,
             'editeur': Editeur,
             'exemplaires': int(Exemplaire),
-            'etat': ", ".join(etats_exemplaires),
+            'etat': etat_final,
             'isbn': str(ISBN)
         }
 
@@ -153,12 +186,46 @@ if st.button('Ajouter ce livre à la bibliothèque'):
             response = requests.post(url, json=data)
             if response.status_code == 200:
                 st.success(f"Le livre '{Titre}' a bien été ajouté !")
-                st.balloons()
                 st.json(data)
             else:
                 st.error(f"Erreur API {response.status_code}: {response.text}")
         except Exception as erreur:
             st.error(f"Erreur de connexion au serveur : {erreur}")
+
+
+ #    st.session_state.auteurs = ['Choisir un auteur', 'Michael McDowell', 'Dean Koontz', 'Stephen King',
+ #    'Beatrix Potter', 'Beatrice Sparks','Agatha Christie', 'Sylvie Baron', 'Satoshi Yagisawa','Dennis Lehane',
+ #    'Charles Duchaussois','Éléonore Devillepoix','Antonio Moresco', 'Amélie Nothomb', 'Annie Ernaux', 'Antoine de Saint-Exupéry', 'Albert Camus', 'Arthur Conan Doyle',
+ # 'Bernard Werber', 'Boris Vian', 'Colette', 'Dan Brown', 'Douglas Adams',
+ # 'Edgar Allan Poe', 'Émile Zola', 'Ernest Hemingway', 'Françoise Sagan', 'Frank Herbert']
+
+# ajouter un nouvel auteur
+
+#ajouter un nouveau genre
+
+# Edition = st.multiselect('Edition*: ', st.session_state.editions, key="id_edition")
+# nouvelle_edition = st.text_input("Ajouter une nouvelle édition")
+# if st.button("Ajouter une édition"):
+#     if nouvelle_edition.strip() != "":
+#         if nouvelle_edition not in st.session_state.editions:
+#             st.session_state.editions.append(nouvelle_edition)
+#             st.success(f"Edition ajoutée : {nouvelle_edition}")
+#             st.rerun()
+#         else:
+#             st.warning("Cette édition existe déjà.")
+# etats_exemplaires = []
+# if Exemplaire > 0:
+#     st.write("États des exemplaires")
+#     cols = st.columns(2) #2 colonnes pour gagner de la place
+#     for i in range(int(Exemplaire)):
+#         # On utilise l'index i pour créer une clé unique par exemplaire
+#         with cols[i % 2]:
+#             etat = st.selectbox(
+#                 f"État de l'exemplaire n°{i+1}*",
+#                 liste_etat,
+#                 key=f"etat_{i}"
+#             )
+#             etats_exemplaires.append(etat)
 
 
  #    st.session_state.auteurs = ['Choisir un auteur', 'Michael McDowell', 'Dean Koontz', 'Stephen King',

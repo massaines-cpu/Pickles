@@ -1,17 +1,26 @@
 import streamlit as st
 import requests
 import pandas as pd
-from LienApi import LienApi
 
-st.title("Gestion des amis & prêts")
+def recup_options(endpoint):
+    try:
+        # Attention : utilisez "amis" en minuscules pour correspondre à votre API @app.get("/amis")
+        res = requests.get(f"http://127.0.0.1:8000/{endpoint.lower()}")
+        if res.status_code == 200:
+            return res.json()  # On renvoie la liste complète de dictionnaires
+        return []
+    except Exception as e:
+        st.error(f"Erreur API sur {endpoint}: {e}")
+        return []
+st.title("Gestion des ami.es & prêts")
 
 # 1. INITIALISATION DE L'ANNUAIRE
 if "amis_details" not in st.session_state:
-    st.session_state.amis_details= LienApi.recup_options("amis")
+    st.session_state.amis_details= recup_options("amis")
     print(st.session_state.amis_details)
 
 #2 LISTE DES AMIS
-st.subheader("Liste des amis")
+st.subheader("Liste des ami.es")
 if st.session_state.amis_details and isinstance(st.session_state.amis_details[0], dict):
     df_amis = pd.DataFrame(st.session_state.amis_details)
     cols_to_show = ["nom", "telephone", "ecole"]
@@ -24,14 +33,14 @@ if st.session_state.amis_details and isinstance(st.session_state.amis_details[0]
     })
     st.dataframe(df_amis, width="stretch", hide_index=True)
 else:
-    st.info("Aucun ami trouvé ou format de données incorrect.")
+    st.info("Aucun.e ami.e trouvé.e ou format de données incorrect.")
 
 st.divider()
 
 st.subheader("Ajouter un nouvel ami dans l'annuaire")
 col1, col2, col3 = st.columns(3)
 with col1:
-    new_nom = st.text_input("Nom de l'ami")
+    new_nom = st.text_input("Nom de l'ami.e")
 with col2:
     new_ecole = st.text_input("École / Établissement")
 with col3:
@@ -39,15 +48,21 @@ with col3:
 
 if st.button("Enregistrer dans l'annuaire"):
     if new_nom.strip() != "":
-        if any(a['Nom'].lower() == new_nom.lower() for a in st.session_state.amis_details):
-            st.warning("Cet ami est déjà dans la liste.")
+        # Sécurité : on vérifie que 'a' est un dictionnaire et possède la clé 'nom'
+        exists = any(
+            isinstance(a, dict) and a.get('nom', '').lower() == new_nom.lower()
+            for a in st.session_state.amis_details
+        )
+        if exists:
+            st.warning("Cet.te ami.e est déjà dans la liste.")
         else:
-            st.session_state.amis_details.append({
-                "Nom": new_nom,
-                "École": new_ecole,
-                "Téléphone": new_tel
-            })
-            st.success(f"{new_nom} a été ajouté !")
+            nouvel_ami = {
+                "nom": new_nom,
+                "ecole": new_ecole,
+                "telephone": new_tel
+            }
+            st.session_state.amis_details.append(nouvel_ami)
+            st.success(f"{new_nom} a été ajouté.e !")
             st.rerun()
     else:
         st.error("Le nom est obligatoire.")
@@ -66,8 +81,14 @@ try:
     col_a, col_b = st.columns(2)
 
     with col_a:
-        noms_amis = ["Choisir un ami"] + [a['nom'] for a in st.session_state.amis_details]
-        ami_choisi = st.selectbox("Qui emprunte le livre ?", noms_amis)
+        noms_list = ["Choisir un ami"]
+        if isinstance(st.session_state.amis_details, list):
+            for ami in st.session_state.amis_details:
+                if isinstance(ami, dict):
+                    noms_list.append(ami.get('nom', 'Inconnu'))
+                else:
+                    noms_list.append(str(ami))
+        ami_choisi = st.selectbox("Qui emprunte le livre ?", noms_list)
 
     with col_b:
         titre_choisi = st.selectbox("Livre à prêter", ["Choisir un livre"] + list(options_livres.keys()))

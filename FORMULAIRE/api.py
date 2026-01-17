@@ -37,11 +37,11 @@ class LivreModel(BaseModel):
     Modèle complet pour ajouter un livre depuis le front
     """
     titre: str
-    resume: str
-    annee: int
+    resume: Optional[str] = None
+    annee: Optional[str] = None
     auteurs: List[str]
     genres: List[str]
-    serie: str
+    serie: Optional[str] = None
     edition: str
     editeur: str
     etat: Literal['Très bon', 'Bon', 'Mauvais', 'Neuf'] #ou juste str
@@ -85,7 +85,9 @@ def ajout_livre(data: LivreModel):
 
     try:
         # --- Série ---
-        serie_id = get_or_create(cursor, "Serie", data.serie)
+        serie_id = None
+        if data.serie and data.serie != "Aucune":
+            serie_id = get_or_create(cursor, "Serie", data.serie)
 
         # --- Editeur ---
         editeur_id = get_or_create(cursor, "Editeur", data.editeur)
@@ -192,7 +194,7 @@ def get_series():
     return [{"id": r[0], "nom": r[1]} for r in rows]
 
 @app.get("/edition")
-def get_series():
+def get_edition():
     conn = get_conn()
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM Edition")
@@ -216,7 +218,7 @@ def get_editeurs():
 def get_amis():
     conn = get_conn()
     cursor = conn.cursor()
-    cursor.execute("SELECT id, nom, telephone, ecole FROM Amis")
+    cursor.execute("SELECT id, nom, telephone, ecole FROM Ami")
     rows = cursor.fetchall()
     cursor.close()
     conn.close()
