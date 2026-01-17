@@ -2,17 +2,6 @@ import streamlit as st
 import requests
 import datetime
 
-# def recup_options(endpoint):
-#     try:
-#         res = requests.get(f"http://127.0.0.1:8000/{endpoint}")
-#         if res.status_code == 200:
-#             items = res.json()
-#
-#             return [item['nom'] for item in items]
-#         return []
-#     except Exception as e:
-#         print(f"Erreur API sur {endpoint}: {e}")
-#         return []
 def recup_options(endpoint):
     try:
         # Attention : utilisez "amis" en minuscules pour correspondre à votre API @app.get("/amis")
@@ -27,10 +16,6 @@ def recup_options(endpoint):
 
 st.markdown('# Bibliothèque de Maxime')
 st.sidebar.markdown('# Bibliothèque de Maxime ')
-# Affiche ce que l'API renvoie réellement dans la barre latérale
-if st.sidebar.button("Debug API"):
-    st.sidebar.write("Auteurs:", recup_options("auteurs"))
-    st.sidebar.write("Editions:", recup_options("edition"))
 
 liste_etat = ['Choisir un état', 'Mauvais', 'Bon', 'Très bon', 'Neuf']
 if "auteurs" not in st.session_state:
@@ -39,21 +24,15 @@ if "auteurs" not in st.session_state:
 if "genres" not in st.session_state:
     st.session_state.genres  = recup_options("genres")
 
-    # st.session_state.genres = ['Choisir un genre', 'Roman','Science-Fiction','Fantastique','Policier','Historique','Thriller','Dystopie','Aventure','Heroic-Fantasy','Romance','Horreur','Biographie','Essai','Conte']
-
 if "series" not in st.session_state:
     les_series = recup_options("series")
     st.session_state.series = ['Aucune'] + les_series
-    # st.session_state.sagas = ["Ne fait pas partie d'une saga", "Harry Potter", "Le Seigneur des Anneaux", "Le Trône de Fer", "Hunger Games", "Dune", "Fondation", "Millénium", "Sherlock Holmes", "La Tour Sombre", "The Witcher", "Le Monde de Narnia", "Twilight", "Percy Jackson", "L'Amie Prodigieuse"]
 
 if "editeurs" not in st.session_state:
     st.session_state.editeurs = recup_options("editeurs")
-    # st.session_state.editeurs = ['Choisir un éditeur', 'Gallimard', 'Hachette', 'Albin Michel', 'Flammarion', 'Grasset', 'Le Seuil', 'Robert Laffont', 'Pocket', 'Folio', 'J\'ai Lu', 'Actes Sud', 'Points', 'Rivages', 'Bragelonne', 'L\'Atalante']
-
 
 if "editions" not in st.session_state:
     st.session_state.editions = recup_options("edition")
-    # st.session_state.editions = ['Choisir l\'édition', 'Broché', 'Poche', 'Relié', 'Collector', 'Numérique / E-book', 'Livre Audio', 'Grand Format', 'Édition Limitée', 'Intégrale', 'BD / Roman Graphique', 'Luxe', 'Fac-similé']
 
 #Formulaire
 Titre = st.text_input('Titre*: ', key="id_titre")

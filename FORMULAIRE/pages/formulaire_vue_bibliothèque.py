@@ -36,10 +36,7 @@ if response.status_code == 200:
 
 
         st.dataframe(df_display, width="stretch", hide_index=True)
-        # df = pd.DataFrame(livres)
-        # #on affiche les colonnes importantes
-        # # st.dataframe(df[['Titre', 'Auteur', 'Exemplaire', 'Etat', 'Emprunteur', 'Genre', 'Saga', 'Editeur', 'Edition']], use_container_width=True)
-        # st.dataframe(df[['id', 'titre', 'resume', 'annee', 'serie', 'editeur', 'edition', 'isbn', 'exemplaire', 'auteur', 'genres']], use_container_width=True)
+
     else:
         st.write("La bibliothèque de Maxime est vide.")
 
@@ -56,7 +53,10 @@ def fetch(endpoint):
 liste_auteurs = fetch('auteurs')
 
 
-
+# df = pd.DataFrame(livres)
+        # #on affiche les colonnes importantes
+        # # st.dataframe(df[['Titre', 'Auteur', 'Exemplaire', 'Etat', 'Emprunteur', 'Genre', 'Saga', 'Editeur', 'Edition']], use_container_width=True)
+        # st.dataframe(df[['id', 'titre', 'resume', 'annee', 'serie', 'editeur', 'edition', 'isbn', 'exemplaire', 'auteur', 'genres']], use_container_width=True)
 
 
 

@@ -99,15 +99,10 @@ try:
 
             if st.button("Valider le prêt"):
                 if ami_choisi != "Choisir un ami":
-                    #
-                    # 1. Calcul du nouveau stock
                     nouveau_stock = livre_data['exemplaires'] - 1
-
-                    # 2. Retirer l'état prêté de la liste
                     etats_possibles.remove(etat_prete)
                     nouveaux_etats_str = ", ".join(etats_possibles)
 
-                    # 3. Préparation des données pour l'API
                     url = f"http://127.0.0.1:8000/livres/{livre_data['id']}"
                     payload = {
                         "exemplaires": nouveau_stock,
@@ -115,7 +110,6 @@ try:
                         "etat": nouveaux_etats_str
                     }
 
-                    # 4. Envoi de la requête PUT
                     res_put = requests.put(url, json=payload)
 
                     if res_put.status_code == 200:
