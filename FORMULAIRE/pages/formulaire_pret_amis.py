@@ -4,15 +4,14 @@ import pandas as pd
 
 def recup_options(endpoint):
     try:
-        # Attention : utilisez "amis" en minuscules pour correspondre à votre API @app.get("/amis")
         res = requests.get(f"http://127.0.0.1:8000/{endpoint.lower()}")
         if res.status_code == 200:
-            return res.json()  # On renvoie la liste complète de dictionnaires
+            # items = res.json()
+            return res.json()  #dico complet
         return []
     except Exception as e:
         st.error(f"Erreur API sur {endpoint}: {e}")
         return []
-st.title("Gestion des ami.es & prêts")
 
 # 1. INITIALISATION DE L'ANNUAIRE
 if "amis_details" not in st.session_state:
@@ -47,7 +46,6 @@ with col3:
 
 if st.button("Enregistrer dans l'annuaire"):
     if new_nom.strip() != "":
-        # Sécurité : on vérifie que 'a' est un dictionnaire et possède la clé 'nom'
         exists = any(
             isinstance(a, dict) and a.get('nom', '').lower() == new_nom.lower()
             for a in st.session_state.amis_details
@@ -72,7 +70,6 @@ st.divider()
 st.subheader("Enregistrer un prêt")
 
 try:
-    # Récupération des livres via l'API
     res = requests.get('http://127.0.0.1:8000/livres')
     livres = res.json()
     options_livres = {livre['titre']: livre for livre in livres if livre.get('exemplaires', 0) > 0}

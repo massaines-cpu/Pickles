@@ -4,11 +4,11 @@ import pandas as pd
 
 def recup_options(endpoint):
     try:
-        # Attention : utilisez "amis" en minuscules pour correspondre à votre API @app.get("/amis")
         res = requests.get(f"http://127.0.0.1:8000/{endpoint.lower()}")
         if res.status_code == 200:
-            return res.json()  # On renvoie la liste complète de dictionnaires
-        return []
+            items = res.json()
+            # return res.json()  # dico complet
+        return [item['nom'] for item in items if 'nom' in item] #[]
     except Exception as e:
         st.error(f"Erreur API sur {endpoint}: {e}")
         return []
