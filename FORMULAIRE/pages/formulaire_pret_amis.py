@@ -87,7 +87,7 @@ try:
 
     if titre_choisi != "Choisir un livre":
         livre_data = options_livres[titre_choisi]
-        etats_bruts = livre_data.get('etat', "")
+        etats_bruts = livre_data['etats'].split(', ')#livre_data.get('etat', "")
         etats_possibles = [e.strip() for e in etats_bruts.split(",") if e.strip()]
 
         if etats_possibles:
