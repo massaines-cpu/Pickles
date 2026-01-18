@@ -29,7 +29,8 @@ if "series" not in st.session_state:
     st.session_state.series = ['Aucune'] + les_series
 
 if "editeurs" not in st.session_state:
-    st.session_state.editeurs = recup_options("editeurs")
+    les_editeurs = recup_options("editeurs")
+    st.session_state.editeurs = ["Choisir un éditeur"] + les_editeurs
 
 if "editions" not in st.session_state:
     st.session_state.editions = recup_options("edition")
@@ -97,15 +98,24 @@ if Exemplaire > 0:
         col_ed, col_et = st.columns(2)
 
         with col_ed:
-            # ID unique grâce à key=f"edition_{i}"
+            #ID unique
             ed_val = st.selectbox(f"Édition n°{i + 1}", st.session_state.editions, key=f"edition_{i}")
         with col_et:
-            # ID unique grâce à key=f"etat_{i}"
+            #id unique
             et_val = st.selectbox(f"État n°{i + 1}", liste_etat, key=f"etat_{i}")
 
-        # On enregistre la combinaison
+        #on enregistre la combinaison
         etats_exemplaires.append(f"{ed_val} ({et_val})")
+nouvelle_edition_nom = st.text_input("Si l'édition n'est pas dans la liste, ajoutez-la ici :")
 
+if st.button("Enregistrer cette nouvelle édition"):
+    if nouvelle_edition_nom.strip() != "":
+        if nouvelle_edition_nom not in st.session_state.editions:
+            st.session_state.editions.append(nouvelle_edition_nom)
+            st.success(f"Édition '{nouvelle_edition_nom}' ajoutée à la liste !")
+            st.rerun()
+        else:
+            st.warning("Cette édition existe déjà dans la liste.")
 ISBN = st.number_input('ISBN*: ', step=1)
 
 st.write("Formulaire livre rempli :", {
