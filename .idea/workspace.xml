@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="25803a5b-3b70-40a2-8c13-f76a7974b380" name="Changes" comment="" />
+    <list default="true" id="9e75098d-1554-4368-b71b-5c9d5c5efc7e" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/FORMULAIRE/api.py" beforeDir="false" afterPath="$PROJECT_DIR$/FORMULAIRE/api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FORMULAIRE/pages/formulaire_ajout_livres.py" beforeDir="false" afterPath="$PROJECT_DIR$/FORMULAIRE/pages/formulaire_ajout_livres.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FORMULAIRE/pages/formulaire_pret_amis.py" beforeDir="false" afterPath="$PROJECT_DIR$/FORMULAIRE/pages/formulaire_pret_amis.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FORMULAIRE/pages/formulaire_vue_bibliothèque.py" beforeDir="false" afterPath="$PROJECT_DIR$/FORMULAIRE/pages/formulaire_vue_bibliothèque.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -13,7 +18,7 @@
   <component name="ProjectColorInfo"><![CDATA[{
   "associatedIndex": 2
 }]]></component>
-  <component name="ProjectId" id="38F5kkv2xuu936dkgLiCk6IA5Gu" />
+  <component name="ProjectId" id="38QvhlhW6ofRKuefgbZ6eGl8F1X" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -25,8 +30,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "ai.playground.ignore.import.keys.banner.in.settings": "true",
-    "git-widget-placeholder": "Test",
-    "ignore.virus.scanning.warn.message": "true",
+    "git-widget-placeholder": "Site",
     "last_opened_file_path": "C:/Users/axfoo/Documents/Simplon/Pickles",
     "nodejs_package_manager_path": "npm",
     "vue.rearranger.settings.migration": "true"
@@ -42,12 +46,12 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="25803a5b-3b70-40a2-8c13-f76a7974b380" name="Changes" comment="" />
-      <created>1768382625475</created>
+      <changelist id="9e75098d-1554-4368-b71b-5c9d5c5efc7e" name="Changes" comment="" />
+      <created>1768744730989</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1768382625475</updated>
-      <workItem from="1768382626920" duration="345000" />
+      <updated>1768744730989</updated>
+      <workItem from="1768744732087" duration="13068000" />
     </task>
     <servers />
   </component>
