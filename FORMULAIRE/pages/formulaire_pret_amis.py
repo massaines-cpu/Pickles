@@ -178,7 +178,6 @@ try:
 
                         if res.status_code == 200:
                             st.success("Livre prêté : " + titre_choisi + " à " + ami_choisi)
-                            st.rerun()
                         else:
                             st.error("Erreur lors de l’enregistrement du prêt.")
 
