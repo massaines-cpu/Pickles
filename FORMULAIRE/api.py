@@ -96,6 +96,7 @@ def ajout_livre(data: LivreModel):
         resume = data.resume if data.resume else ""
         annee = str(data.annee) if data.annee else "NULL"
 
+<<<<<<< HEAD
         # Construction SQL "à la main"
         sql_livre = (
             "INSERT INTO livre (titre, resume, annee, serie_id) VALUES ("
@@ -104,6 +105,47 @@ def ajout_livre(data: LivreModel):
             + annee + ", "
             + serie_id
             + ") RETURNING id"
+=======
+        # --- Premier exemplaire (nécessaire pour Edition) ---
+        cursor.execute(
+            "INSERT INTO Exemplaire (etat, ami_id, edition_id) VALUES (%s, %s, NULL) RETURNING id",
+            (data.etat, 1)
+        )
+        ex_id = cursor.fetchone()[0]
+
+        # --- Edition --- POUR  EMPECHER DOUBLON
+        cursor.execute("SELECT id FROM Edition WHERE nom = %s AND isbn = %s", (data.edition, data.isbn))
+        row = cursor.fetchone()
+
+        if row:
+            edition_id = row[0]  # Elle existe, on récupère son ID
+        else:
+            # Elle n'existe pas, on l'insère
+            cursor.execute(
+                "INSERT INTO Edition (nom, annee, isbn, editeur_id, exemplaire_id) "
+                "VALUES (%s, %s, %s, %s, %s) RETURNING id",
+                (data.edition, data.annee, data.isbn, editeur_id, ex_id)
+            )
+            edition_id = cursor.fetchone()[0]
+        # cursor.execute(
+        #     "INSERT INTO Edition (nom, annee, isbn, editeur_id, exemplaire_id) "
+        #     "VALUES (%s, %s, %s, %s, %s) RETURNING id",
+        #     (data.edition, data.annee, data.isbn, editeur_id, ex_id)
+        # )
+        # edition_id = cursor.fetchone()[0]
+
+        # --- Mise à jour du premier exemplaire pour pointer sur l'édition ---
+        cursor.execute(
+            "UPDATE Exemplaire SET edition_id = %s WHERE id = %s",
+            (edition_id, ex_id)
+        )
+
+        # --- Livre ---
+        cursor.execute(
+            "INSERT INTO Livre (titre, resume, annee, serie_id, edition_id) "
+            "VALUES (%s, %s, %s, %s, %s) RETURNING id",
+            (data.titre, data.resume, data.annee, serie_id, edition_id)
+>>>>>>> 7331947057caf2c24f6b3a2386dd7719af30e052
         )
         cursor.execute(sql_livre)
         livre_id = cursor.fetchone()[0]
@@ -352,6 +394,43 @@ def ajouter_ami(ami: AmiModel):
 def get_amis():
     conn = get_conn()
     cursor = conn.cursor()
+<<<<<<< HEAD
+=======
+    cursor.execute("SELECT id, nom, telephone, ecole FROM Ami")
+    rows = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    # Retourne une liste de dictionnaires
+    return [{"id": r[0], "nom": r[1], "telephone": r[2], "ecole": r[3]} for r in rows]
+
+@app.post("/amis")
+def ajouter_ami(ami: AmiModel):
+    conn = get_conn()
+    cursor = conn.cursor()
+    try:
+        cursor.execute(
+            "INSERT INTO Ami (nom, telephone, ecole) VALUES (%s, %s, %s) RETURNING id",
+            (ami.nom, ami.telephone, ami.ecole)
+        )
+        new_id = cursor.fetchone()[0]
+        conn.commit()
+        return {"success": True, "id": new_id, "message": "Ami ajouté avec succès"}
+    except Exception as e:
+        conn.rollback()
+        return {"success": False, "message": str(e)}
+    finally:
+        cursor.close()
+        conn.close()
+# ----------------------------
+# VISUALISER, SUPPRIMER, REMETTRE DISPONIBLE
+# ----------------------------
+
+@app.get("/livres")
+def get_livres():
+    """Retourne tous les livres avec leurs infos complètes"""
+    conn = get_conn()
+    cursor = conn.cursor()
+>>>>>>> 7331947057caf2c24f6b3a2386dd7719af30e052
     try:
         cursor.execute("SELECT id, nom, telephone, ecole FROM ami ORDER BY nom")
         return [{

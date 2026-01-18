@@ -79,13 +79,18 @@ with col3:
     new_tel = st.text_input("Numéro de téléphone")
 
 if st.button("Enregistrer dans l'annuaire"):
+<<<<<<< HEAD
 
     # Dictionnaire envoyé à l’API
+=======
+    # On crée le dictionnaire avec les clés exactes du AmiModel
+>>>>>>> 7331947057caf2c24f6b3a2386dd7719af30e052
     nouveau_pote = {
         "nom": new_nom,
         "telephone": new_tel,
         "ecole": new_ecole
     }
+<<<<<<< HEAD
 
     url_post = API_URL + "/amis"
     reponse = requests.post(url_post, json=nouveau_pote)
@@ -94,6 +99,12 @@ if st.button("Enregistrer dans l'annuaire"):
         st.success("Ami.e ajouté.e dans la BDD")
 
         # Forcer le rechargement des amis
+=======
+    # ON ENVOIE À L'API
+    reponse = requests.post("http://127.0.0.1:8000/amis", json=nouveau_pote)
+    if reponse.status_code == 200:
+        st.success("Ami.e ajouté.e dans la BDD")
+>>>>>>> 7331947057caf2c24f6b3a2386dd7719af30e052
         if "amis_details" in st.session_state:
             del st.session_state.amis_details
 
@@ -108,7 +119,13 @@ st.divider()
 st.subheader("Enregistrer un prêt")
 
 try:
+<<<<<<< HEAD
     livres = recup_options("livres")
+=======
+    res = requests.get('http://127.0.0.1:8000/livres')
+    livres = res.json()
+    options_livres = {livre['titre']: livre for livre in livres} #{livre['titre']: livre for livre in livres if livre.get('exemplaires', 0) > 0}
+>>>>>>> 7331947057caf2c24f6b3a2386dd7719af30e052
 
     if not livres:
         st.info("Aucun livre disponible.")
@@ -133,7 +150,14 @@ try:
             titres.insert(0, "Choisir un livre")
             titre_choisi = st.selectbox("Livre à prêter", titres)
 
+<<<<<<< HEAD
         if titre_choisi != "Choisir un livre":
+=======
+    if titre_choisi != "Choisir un livre":
+        livre_data = options_livres[titre_choisi]
+        etats_bruts = livre_data['etats'].split(', ')#livre_data.get('etat', "")
+        etats_possibles = [e.strip() for e in etats_bruts.split(",") if e.strip()]
+>>>>>>> 7331947057caf2c24f6b3a2386dd7719af30e052
 
             livre_data = options_livres[titre_choisi]
 
