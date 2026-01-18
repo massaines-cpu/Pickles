@@ -45,24 +45,20 @@ with col3:
     new_tel = st.text_input("Numéro de téléphone")
 
 if st.button("Enregistrer dans l'annuaire"):
-    if new_nom.strip() != "":
-        exists = any(
-            isinstance(a, dict) and a.get('nom', '').lower() == new_nom.lower()
-            for a in st.session_state.amis_details
-        )
-        if exists:
-            st.warning("Cet.te ami.e est déjà dans la liste.")
-        else:
-            nouvel_ami = {
-                "nom": new_nom,
-                "ecole": new_ecole,
-                "telephone": new_tel
-            }
-            st.session_state.amis_details.append(nouvel_ami)
-            st.success(f"{new_nom} a été ajouté.e !")
-            st.rerun()
-    else:
-        st.error("Le nom est obligatoire.")
+    # On crée le dictionnaire avec les clés exactes du AmiModel
+    nouveau_pote = {
+        "nom": new_nom,
+        "telephone": new_tel,
+        "ecole": new_ecole
+    }
+    # ON ENVOIE À L'API
+    reponse = requests.post("http://127.0.0.1:8000/amis", json=nouveau_pote)
+    if reponse.status_code == 200:
+        st.success("Ami.e ajouté.e dans la BDD")
+        if "amis_details" in st.session_state:
+            del st.session_state.amis_details
+
+        st.rerun()
 
 st.divider()
 
@@ -72,7 +68,7 @@ st.subheader("Enregistrer un prêt")
 try:
     res = requests.get('http://127.0.0.1:8000/livres')
     livres = res.json()
-    options_livres = {livre['titre']: livre for livre in livres if livre.get('exemplaires', 0) > 0}
+    options_livres = {livre['titre']: livre for livre in livres} #{livre['titre']: livre for livre in livres if livre.get('exemplaires', 0) > 0}
 
     col_a, col_b = st.columns(2)
 
