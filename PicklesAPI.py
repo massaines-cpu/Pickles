@@ -19,12 +19,12 @@ class LivreCreate(BaseModel):
     Exemplaire: int                           # Exemplaire *
     ISBN: int                                 # ISBN *
     resume: Optional[str] = None              # Résumé
-    
-    #CE QUE JE RECOIS DU FORMUALIRE cree un amie
-    class Amis(BaseModel):
-        nom: str
-        telephone: int
-        ecole: str
+
+#CE QUE JE RECOIS DU FORMUALIRE cree un amie
+class Amis(BaseModel):
+    nom: str
+    telephone: int
+    ecole: str
 
     #formulaire preté un livre
 
@@ -37,7 +37,7 @@ def get_conn():
         host="127.0.0.1",
         port=5432
     )
-    
+  # fontion pour verifié si uen entré existe deja  
 def get_or_create(cursor, table, nom):
     #"""Cherche une entrée dans table par nom, sinon l'insère et retourne l'id"""
     cursor.execute(f"SELECT id FROM {table} WHERE nom = %s", (nom,))
@@ -51,6 +51,28 @@ def get_or_create(cursor, table, nom):
 
 
 ##########POST#####
+
+
+@app.post("/Ami")
+async def ajouter_ami(ami: Amis):
+    conn = get_conn()
+    cursor = conn.cursor()
+    
+    sql = """
+    INSERT INTO Ami
+    (nom, telephone, ecole)
+    VALUES
+    (%s, %s, %s)
+    RETURNING id;
+    """
+    
+    cursor.execute(sql, (ami.nom, ami.telephone, ami.ecole))
+    new_id = cursor.fetchone()[0]
+    conn.commit()
+    cursor.close()
+    conn.close()
+    
+    return {"id": new_id, "nom": ami.nom, "telephone": ami.telephone, "ecole": ami.ecole}
 
 
 @app.post("/livreS")
